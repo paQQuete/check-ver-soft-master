@@ -2,7 +2,16 @@ import json
 import os
 import codecs
 
-DIR = os.chdir(r"\\10.11.178.200\сеть\владимиров\responce")
+from . import sensdata
+
+'''
+all sensitive data in sensdata.py
+'''
+
+
+DIR = sensdata.DIR
+
+
 
 
 class DataSoup():
