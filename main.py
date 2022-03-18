@@ -2,7 +2,7 @@ import json
 import os
 import codecs
 
-from . import sensdata
+import sensdata
 
 '''
 all sensitive data in sensdata.py
@@ -25,12 +25,16 @@ class DataSoup():
 
 
     def _parseDataFromFile(self) -> dict:
+        outdict = dict()
         flist = self._filesList
         for each in flist:
+            hostname = each[:each.rindex('-')]
+            unixtime = each[each.rindex('-')+1:]
             with codecs.open(each, mode='r', encoding='utf-8-sig') as f:
                 file = f.read()
                 file = file.replace('\r', '').replace('\n', '')
                 data = json.loads(file)
+
                 pass
 
     def makeCollection(self):
