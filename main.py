@@ -44,6 +44,17 @@ class DataSoup():
 
         return outlist
 
+class GivenOutData():
+
+    @staticmethod
+    def givenSelectedData(data: list[dict]) -> list[dict]:
+        querySoft = ''
+
+    @staticmethod
+    def givenAllData(data):
+        with open('data-out.json', mode='w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
 
 
 
@@ -51,7 +62,8 @@ if __name__ == '__main__':
     fileslist = GetDataFiles.getFromDirectory(DIR)
     A = DataSoup.parseDataFromFile(fileslist)
 
-    with open('data-out.json', mode='w', encoding='utf-8') as f:
-        json.dump(A, f, ensure_ascii=False, indent=4)
+
+
+
 
     print('vse')
