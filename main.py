@@ -76,8 +76,6 @@ class GivenOutData():
 
 
 if __name__ == '__main__':
-
-
     fileslist = GetDataFiles.getFromDirectory(DIR)
     A = DataSoup.parseDataFromFile(fileslist)
 
