@@ -7,7 +7,6 @@ import sensdata
 '''
 all sensitive data in sensdata.py
 '''
-
 DIR = sensdata.DIR
 
 
@@ -44,26 +43,45 @@ class DataSoup():
 
         return outlist
 
+
 class GivenOutData():
 
     @staticmethod
-    def givenSelectedData(data: list[dict]) -> list[dict]:
-        querySoft = ''
+    def givenSelectedData1C(data: list[dict]) -> list[dict]:
+        queryPublisher = '1С-Софт'
+        queryDisplayVersion1octet = '8'
+        queryDisplayVersion2octet = '3'
+        queryDisplayVersion3octet = '19'
+        outlist = list()
+        alreadyHostnames = list()
+
+        for each in data:
+            if each['hostname'] in alreadyHostnames:
+                continue
+
+            for eachsoft in each['data']:
+                if eachsoft['Publisher'] == queryPublisher and eachsoft['DisplayVersion'].split('.')[
+                    2] == queryDisplayVersion3octet:
+                    each['data'] = eachsoft
+                    outlist.append(each)
+                    alreadyHostnames.append(each['hostname'])
+                    break
+
+        return outlist
 
     @staticmethod
-    def givenAllData(data):
+    def storeToFile(data):
         with open('data-out.json', mode='w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
 
-
-
 if __name__ == '__main__':
+
+
     fileslist = GetDataFiles.getFromDirectory(DIR)
     A = DataSoup.parseDataFromFile(fileslist)
 
-
-
-
+    B = GivenOutData.givenSelectedData1C(A)
+    GivenOutData.storeToFile(B)
 
     print('vse')
