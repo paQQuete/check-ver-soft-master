@@ -26,14 +26,19 @@ class DataSoup():
 
         for each in flist:
             outdict = dict()
-            hostname = each[:each.rindex('-')]
-            unixtime = int(each[each.rindex('-') + 1:each.rindex(',')])
-            ntime = datetime.fromtimestamp(unixtime)
+
+            each_split = each.split('~')
+            hostname = each_split[0]
+            username = each_split[1]
+            time = each_split[2].split(',')
+            time = time[0]
+
+            ntime = datetime.fromtimestamp(int(time))
 
             # Serialize datetime here!
             ntime = ntime.strftime('%Y-%m-%d %H:%M:%S')
 
-            outdict.update({'hostname': hostname, 'unixtime': unixtime, 'normal time': ntime})
+            outdict.update({'username': username, 'hostname': hostname, 'unixtime': time, 'normal time': ntime})
             with codecs.open(each, mode='r', encoding='utf-8-sig') as f:
                 file = f.read()
                 file = file.replace('\r', '').replace('\n', '')
@@ -60,7 +65,9 @@ class GivenOutData():
                 continue
 
             for eachsoft in each['data']:
-                if eachsoft['Publisher'] == queryPublisher and eachsoft['DisplayVersion'].split('.')[
+                eachsoft = {k.upper(): v for k, v in eachsoft.items()}
+
+                if eachsoft['PUBLISHER'] == queryPublisher and eachsoft['DISPLAYVERSION'].split('.')[
                     2] == queryDisplayVersion3octet:
                     each['data'] = eachsoft
                     outlist.append(each)
