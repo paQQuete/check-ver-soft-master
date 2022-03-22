@@ -77,6 +77,33 @@ class GivenOutData():
         return outlist
 
     @staticmethod
+    def given1cAbove19(data: list[dict]) -> list[dict]:
+        queryPublisher = '1С-Софт'
+        queryDisplayVersion1octet = '8'
+        queryDisplayVersion2octet = '3'
+        queryDisplayVersion3octet = '19'
+        outlist = list()
+        alreadyHostnames = list()
+        thisScopeVersion = list()
+
+        for each in data:
+            if each['hostname'] in alreadyHostnames:
+                continue
+
+            for eachsoft in each['data']:
+                eachsoft = {k.upper(): v for k, v in eachsoft.items()}
+
+                if eachsoft['PUBLISHER'] == queryPublisher and eachsoft['DISPLAYVERSION'].split('.')[
+                    2] == queryDisplayVersion3octet:
+                    each['data'] = eachsoft
+                    outlist.append(each)
+                    alreadyHostnames.append(each['hostname'])
+                    break
+
+        return outlist
+
+
+    @staticmethod
     def storeToFile(data):
         with open('data-out.json', mode='w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)

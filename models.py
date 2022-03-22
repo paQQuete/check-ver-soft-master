@@ -1,12 +1,9 @@
 from peewee import *
-
-user = '*'
-password = '*'
-db_name = '*'
+import sensdata
 
 dbhandle = MySQLDatabase(
-    db_name, user=user,
-    password=password,
+    sensdata.db_name, user=sensdata.user,
+    password=sensdata.password,
     host='localhost'
 )
 
@@ -16,10 +13,14 @@ class BaseModel(Model):
         database = dbhandle
 
 
-class PSQuery(BaseModel):
+class Machine(BaseModel):
     id = PrimaryKeyField(null=False)
     username = CharField(null=True)
     hostname = CharField(null=False)
+
+
+class Row(BaseModel):
+    machine = ForeignKeyField(Machine, related_name='on PC')
     unixtime_query = TimestampField(null=False)
     normaltime_query = DateTimeField(null=False)
     publisher = CharField(null=False)
@@ -27,3 +28,9 @@ class PSQuery(BaseModel):
     displayversion = CharField(null=False)
     displaversionFloat = FloatField(null=False)
     installdate = DateTimeField(null=True)
+
+
+if __name__ == '__main__':
+    dbhandle.connect()
+    Machine.create_table()
+    Row.create_table()
