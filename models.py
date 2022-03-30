@@ -16,7 +16,7 @@ class BaseModel(Model):
 class Machine(BaseModel):
     id = PrimaryKeyField(null=False)
     username = CharField(null=True)
-    hostname = CharField(null=False)
+    hostname = CharField(null=False, unique=True)
 
 
 class Row(BaseModel):

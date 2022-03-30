@@ -3,6 +3,10 @@ import os
 import codecs
 from datetime import datetime
 from typing import Tuple, List
+import hashlib
+
+import peewee
+from models import *
 
 import sensdata
 
@@ -23,7 +27,19 @@ class GetDataFiles():
         return os.listdir(directory)
 
 
-class DataSoup():
+class DataSoup():#
+    def __init__(self, flist):
+        self._parseData = self.parseDataFromFile(flist)
+
+
+    def prepareDB(self) -> list[list]:
+
+
+        for each in self._parseData:
+            hostname = each['hostname']
+            username = each['username']
+#
+
 
     @staticmethod
     def parseDataFromFile(flist) -> list[dict]:
@@ -31,6 +47,7 @@ class DataSoup():
 
         for each in flist:
             outdict = dict()
+            alreadyUsedHashes = list()
 
             each_split = each.split('~')
             hostname = each_split[0]
@@ -43,7 +60,10 @@ class DataSoup():
             # Serialize datetime here!
             ntime = ntime.strftime('%Y-%m-%d %H:%M:%S')
 
-            outdict.update({'username': username, 'hostname': hostname, 'unixtime': time, 'normal time': ntime})
+            outdict.update({'username': username, 'hostname': hostname, 'unixtime': time, 'normal time': ntime})#
+            hash_obj = hashlib.md5(str(username+hostname+time).encode())
+            alreadyUsedHashes.append(hash_obj.hexdigest())#
+
             with codecs.open(each, mode='r', encoding='utf-8-sig') as f:
                 file = f.read()
                 file = file.replace('\r', '').replace('\n', '')
@@ -122,6 +142,12 @@ class GivenOutData():
 
         with open(filename, mode='w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
+
+class DBwork():
+    @staticmethod
+    def save_toRowModel(data: list):
+        row = models.Row(machine=data[0])
+
 
 
 if __name__ == '__main__':
