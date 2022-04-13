@@ -1,7 +1,8 @@
 from peewee import *
+from playhouse.postgres_ext import PostgresqlExtDatabase
 import sensdata
 
-dbhandle = MySQLDatabase(
+dbhandle = PostgresqlExtDatabase(
     sensdata.db_name, user=sensdata.user,
     password=sensdata.password,
     host='localhost'
