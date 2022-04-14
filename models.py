@@ -1,11 +1,13 @@
-from peewee import *
-from playhouse.postgres_ext import PostgresqlExtDatabase
+
 import sensdata
+from playhouse.postgres_ext import *
 
 dbhandle = PostgresqlExtDatabase(
     sensdata.db_name, user=sensdata.user,
     password=sensdata.password,
-    host='localhost'
+    host='localhost',
+    port=5432,
+    register_hstore=True
 )
 
 

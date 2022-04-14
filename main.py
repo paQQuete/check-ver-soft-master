@@ -28,6 +28,15 @@ class GetDataFiles():
 
 
 class DataSoup():#
+
+    '''
+
+    перед записью в таблицу нужно проверять:
+    есть ли Хостнейм в таблице, если есть - НЕ делать новую запись (в начале читаем БД на это и потом используем данные из памяти)
+    есть ли Конкретная запись о софте (row) - НЕ делать новую запись (тоже самое) (
+
+    '''
+
     def __init__(self, flist):
         self._parseData = self.parseDataFromFile(flist)
 
@@ -47,7 +56,8 @@ class DataSoup():#
 
         for each in flist:
             outdict = dict()
-            alreadyUsedHashes = list()
+            alreadyUsedHashes_files = list()
+            alreadyUsed_hosts = list()
 
             each_split = each.split('~')
             hostname = each_split[0]
@@ -62,7 +72,10 @@ class DataSoup():#
 
             outdict.update({'username': username, 'hostname': hostname, 'unixtime': time, 'normal time': ntime})#
             hash_obj = hashlib.md5(str(username+hostname+time).encode())
-            alreadyUsedHashes.append(hash_obj.hexdigest())#
+            alreadyUsedHashes_files.append(hash_obj.hexdigest())#
+
+            hash_obj = hashlib.md5(str(hostname).encode())
+            alreadyUsedHashes_hosts.append(hash_obj.hexdigest())  #
 
             with codecs.open(each, mode='r', encoding='utf-8-sig') as f:
                 file = f.read()
